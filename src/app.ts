@@ -2,6 +2,7 @@ import debug from 'debug';
 import { config } from 'dotenv';
 import express from 'express';
 import { Server } from 'http';
+import createError from 'http-errors';
 import { errorHandler, middlewares } from './middlewares';
 import router from './routes';
 
@@ -14,6 +15,7 @@ const port = +(process.env.PORT ?? 8080);
 
 middlewares(app);
 app.use('/api', router);
+app.use((req, res, next) => next(createError(404)));
 app.use(errorHandler);
 
 export function startServer(): void {
@@ -26,14 +28,19 @@ export function startServer(): void {
     process.exit(1);
   });
 
-  process.on('SIGINT', () => {
-    stopServer();
-  });
+  const handleTermination = () => {
+    stopServer().then(() => {
+      process.exit(0);
+    });
+  };
+
+  process.on('SIGTERM', handleTermination);
+  process.on('SIGINT', handleTermination);
 }
 
-export async function stopServer(): Promise<void> {
+export async function stopServer(): Promise<Server> {
   log('Stopping server...');
-  server.close((err?: Error) => {
+  return server.close((err?: Error) => {
     if (err) {
       log(`Error while stopping server: ${err.message}`);
     } else {

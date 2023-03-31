@@ -1,6 +1,6 @@
 # Business Search Backend Service
 
-This is a backend service built with Express that provides APIs for business search. The service utilizes the external API to fetch data on businesses, and returns the results in a standardized format.
+This is a backend service built with Express that provides API for business search. The service utilizes the external API to fetch data on businesses, and returns the results in a standardized format.
 
 ## **Technologies Used**
 

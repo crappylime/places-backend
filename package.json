@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc & node .",
+    "start": "tsc && node .",
     "dev": "npm run lint:fix && npm run prettier && tsc -w & nodemon .",
     "debug": "DEBUG=places:* npm run dev",
     "test": "jest --detectOpenHandles",

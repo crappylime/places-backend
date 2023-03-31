@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { Contact, LocalEntryPlace, Place } from './models';
 import createError from 'http-errors';
 
@@ -11,14 +11,10 @@ export async function fetchPlace(placeId: string): Promise<Place> {
     return transformPlace(response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response) {
-        throw createError(
-          axiosError.response.status,
-          axiosError.response.statusText,
-        );
+      if (error.response) {
+        throw createError(error.response.status, error.response.statusText);
       } else {
-        throw new Error(`API request failed: ${axiosError.message}`);
+        throw new Error(`API request failed: ${error.message}`);
       }
     } else {
       const errorMessage =
@@ -33,12 +29,7 @@ export async function fetchPlace(placeId: string): Promise<Place> {
 }
 
 export async function fetchPlaces(): Promise<Place[]> {
-  const places: Place[] = [];
-  for (const placeId of PLACE_IDS) {
-    const place = await fetchPlace(placeId);
-    places.push(place);
-  }
-  return places;
+  return Promise.all(PLACE_IDS.map((id) => fetchPlace(id)));
 }
 
 function transformPlace(localEntryPlace: LocalEntryPlace): Place {
