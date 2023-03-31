@@ -13,7 +13,7 @@ import createError from 'http-errors';
 import morgan from 'morgan';
 
 const corsOptions: CorsOptions = {
-  origin: process.env.FRONTEND_URL ?? 'https://localhost:3000',
+  origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
 
