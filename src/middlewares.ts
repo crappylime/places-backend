@@ -32,6 +32,7 @@ export function errorHandler(
   res: Response,
   next: NextFunction,
 ): void {
+  // Don't send duplicate headers to the client to avoid errors
   if (res.headersSent) {
     return next(err);
   }
